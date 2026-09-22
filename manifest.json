@@ -1,0 +1,10 @@
+{
+    "name": "My Study Planner",
+    "short_name": "Study Planner",
+    "start_url": "./index.html",
+    "display": "standalone",
+    "background_color": "#090e25",
+    "theme_color": "#2563eb",
+    "orientation": "portrait",
+    "description": "My daily study planner"
+}

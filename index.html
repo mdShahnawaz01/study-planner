@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Study Planner</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+
+            background:
+                radial-gradient(circle at 10% 20%, #7c3aed 0%, transparent 30%),
+                radial-gradient(circle at 90% 10%, #2563eb 0%, transparent 30%),
+                radial-gradient(circle at 80% 90%, #ec4899 0%, transparent 35%),
+                linear-gradient(135deg, #090e25, #141b3a);
+
+            color: white;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 850px;
+            margin: auto;
+        }
+
+        /* HEADER */
+
+        .header {
+            text-align: center;
+            padding: 25px 15px;
+            margin-bottom: 18px;
+
+            background: rgba(255,255,255,0.12);
+            backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255,255,255,0.20);
+            border-radius: 22px;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        }
+
+        .header h1 {
+            font-size: 29px;
+            margin-bottom: 16px;
+        }
+
+        .day {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .date {
+            margin-top: 7px;
+            font-size: 17px;
+            color: #dbeafe;
+        }
+
+        /* NAVIGATION */
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .navigation button {
+            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255,255,255,0.14);
+            color: white;
+
+            padding: 12px 18px;
+            border-radius: 12px;
+
+            font-size: 14px;
+            cursor: pointer;
+
+            backdrop-filter: blur(10px);
+        }
+
+        .navigation button:hover {
+            background: rgba(255,255,255,0.25);
+        }
+
+        /* STUDY CARD */
+
+        .study-card {
+            background: rgba(255,255,255,0.11);
+            backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 22px;
+
+            padding: 20px;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        }
+
+        .study-title {
+            font-size: 21px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 650px;
+            background: rgba(0,0,0,0.15);
+        }
+
+        th {
+            background: rgba(0,0,0,0.25);
+            padding: 14px 10px;
+            font-size: 15px;
+        }
+
+        td {
+            padding: 13px 10px;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
+
+        .content {
+            width: 40%;
+            font-size: 15px;
+        }
+
+        .tick {
+            width: 10%;
+            text-align: center;
+        }
+
+        .notes {
+            width: 50%;
+        }
+
+        /* CHECKBOX */
+
+        .tick input {
+            width: 23px;
+            height: 23px;
+            cursor: pointer;
+            accent-color: #22c55e;
+        }
+
+        /* NOTES */
+
+        .notes input {
+            width: 100%;
+            padding: 10px 12px;
+
+            border: 1px solid rgba(255,255,255,0.22);
+            border-radius: 9px;
+
+            background: rgba(255,255,255,0.12);
+            color: white;
+
+            outline: none;
+            font-size: 14px;
+        }
+
+        .notes input::placeholder {
+            color: #cbd5e1;
+        }
+
+        .notes input:focus {
+            border-color: #60a5fa;
+            background: rgba(255,255,255,0.18);
+        }
+
+        /* ADD TOPIC */
+
+        .add-topic {
+            width: 100%;
+            margin-top: 17px;
+
+            padding: 13px;
+
+            border: 1px dashed rgba(255,255,255,0.45);
+            border-radius: 12px;
+
+            background: rgba(255,255,255,0.08);
+            color: white;
+
+            font-size: 15px;
+            cursor: pointer;
+        }
+
+        .add-topic:hover {
+            background: rgba(255,255,255,0.16);
+        }
+
+        /* PROGRESS */
+
+        .progress-card {
+            margin-top: 18px;
+            padding: 20px;
+
+            background: rgba(255,255,255,0.11);
+            backdrop-filter: blur(18px);
+
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 22px;
+
+            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
+        }
+
+        .progress-heading {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 18px;
+
+            background: rgba(255,255,255,0.15);
+            border-radius: 50px;
+
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+
+            background: linear-gradient(
+                90deg,
+                #22c55e,
+                #2dd4bf,
+                #38bdf8
+            );
+
+            border-radius: 50px;
+
+            transition: width 0.3s;
+        }
+
+        .message {
+            text-align: center;
+            margin-top: 12px;
+            color: #dbeafe;
+            font-size: 14px;
+        }
+
+        @media (max-width: 600px) {
+
+            body {
+                padding: 12px;
+            }
+
+            .header h1 {
+                font-size: 24px;
+            }
+
+            .day {
+                font-size: 22px;
+            }
+
+            .navigation button {
+                padding: 10px 12px;
+                font-size: 13px;
+            }
+
+            .study-card {
+                padding: 14px;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+<div class="app">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <h1>📚 My Study Planner</h1>
+
+        <div class="day">
+            Tuesday
+        </div>
+
+        <div class="date">
+            22/09/2026
+        </div>
+
+    </div>
+
+
+    <!-- NAVIGATION -->
+
+    <div class="navigation">
+
+        <button onclick="previousDay()">
+            ← Previous Day
+        </button>
+
+        <button onclick="nextDay()">
+            Next Day →
+        </button>
+
+    </div>
+
+
+    <!-- STUDY -->
+
+    <div class="study-card">
+
+        <div class="study-title">
+            📖 Today's Study
+        </div>
+
+
+        <div class="table-wrapper">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>Content</th>
+
+                        <th>Tick</th>
+
+                        <th>Additional Note</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody id="topicList">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <button class="add-topic" onclick="addExtraTopic()">
+            ＋ Add Extra Topic
+        </button>
+
+    </div>
+
+
+    <!-- PROGRESS -->
+
+    <div class="progress-card">
+
+        <div class="progress-heading">
+
+            <span>
+                📊 Today's Completion
+            </span>
+
+            <span id="percentage">
+                0%
+            </span>
+
+        </div>
+
+
+        <div class="progress-bar">
+
+            <div
+                class="progress-fill"
+                id="progressFill">
+            </div>
+
+        </div>
+
+
+        <div
+            class="message"
+            id="message">
+
+            Complete your daily targets 🚀
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =====================================
+    // DEFAULT 5 TOPICS
+    // =====================================
+
+    const defaultTopics = [
+
+        "Programming Lecture (1 hr)",
+
+        "Daily Notes Revision (1 hr)",
+
+        "Exams Preparation (1 hr)",
+
+        "Assignment (1 hr)",
+
+        "English Learning (30 min)"
+
+    ];
+
+
+    // =====================================
+    // CURRENT DATE
+    // =====================================
+
+    let currentDate = new Date();
+
+
+    // =====================================
+    // DATE FORMAT
+    // =====================================
+
+    function formatDate(date) {
+
+        const day =
+            String(date.getDate()).padStart(2, "0");
+
+        const month =
+            String(date.getMonth() + 1).padStart(2, "0");
+
+        const year =
+            date.getFullYear();
+
+        return `${day}/${month}/${year}`;
+    }
+
+
+    function getDateKey(date) {
+
+        return (
+            date.getFullYear() +
+            "-" +
+            String(date.getMonth() + 1).padStart(2, "0") +
+            "-" +
+            String(date.getDate()).padStart(2, "0")
+        );
+
+    }
+
+
+    // =====================================
+    // DATE DISPLAY
+    // =====================================
+
+    function updateDate() {
+
+        document.querySelector(".day").textContent =
+            currentDate.toLocaleDateString(
+                "en-US",
+                {
+                    weekday: "long"
+                }
+            );
+
+
+        document.querySelector(".date").textContent =
+            formatDate(currentDate);
+
+    }
+
+
+    // =====================================
+    // GET DATA
+    // =====================================
+
+    function getTodayData() {
+
+        const key =
+            getDateKey(currentDate);
+
+        const saved =
+            localStorage.getItem(
+                "study-" + key
+            );
+
+
+        if (saved) {
+
+            return JSON.parse(saved);
+
+        }
+
+
+        return {
+
+            topics: defaultTopics.map(topic => ({
+
+                name: topic,
+
+                completed: false,
+
+                note: ""
+
+            }))
+
+        };
+
+    }
+
+
+    // =====================================
+    // SAVE DATA
+    // =====================================
+
+    function saveData(data) {
+
+        const key =
+            getDateKey(currentDate);
+
+        localStorage.setItem(
+
+            "study-" + key,
+
+            JSON.stringify(data)
+
+        );
+
+    }
+
+
+    // =====================================
+    // LOAD TOPICS
+    // =====================================
+
+    function loadTopics() {
+
+        const data =
+            getTodayData();
+
+
+        const topicList =
+            document.getElementById(
+                "topicList"
+            );
+
+
+        topicList.innerHTML = "";
+
+
+        data.topics.forEach(
+            (topic, index) => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                row.innerHTML = `
+
+                    <td class="content">
+                        ${index + 1}. ${topic.name}
+                    </td>
+
+                    <td class="tick">
+
+                        <input
+                            type="checkbox"
+                            ${topic.completed ? "checked" : ""}
+                            onchange="toggleTopic(${index})"
+                        >
+
+                    </td>
+
+                    <td class="notes">
+
+                        <input
+                            type="text"
+                            placeholder="Write a note..."
+                            value="${topic.note}"
+                            oninput="saveNote(${index}, this.value)"
+                        >
+
+                    </td>
+
+                `;
+
+
+                topicList.appendChild(row);
+
+            }
+        );
+
+
+        updateProgress();
+
+    }
+
+
+    // =====================================
+    // CHECKBOX
+    // =====================================
+
+    function toggleTopic(index) {
+
+        const data =
+            getTodayData();
+
+
+        data.topics[index].completed =
+            !data.topics[index].completed;
+
+
+        saveData(data);
+
+
+        updateProgress();
+
+    }
+
+
+    // =====================================
+    // SAVE NOTE
+    // =====================================
+
+    function saveNote(index, note) {
+
+        const data =
+            getTodayData();
+
+
+        data.topics[index].note =
+            note;
+
+
+        saveData(data);
+
+    }
+
+
+    // =====================================
+    // PROGRESS
+    // =====================================
+
+    function updateProgress() {
+
+        const data =
+            getTodayData();
+
+
+        const total =
+            data.topics.length;
+
+
+        const completed =
+            data.topics.filter(
+                topic => topic.completed
+            ).length;
+
+
+        const percentage =
+            total === 0
+            ? 0
+            : Math.round(
+                (completed / total) * 100
+            );
+
+
+        document.getElementById(
+            "percentage"
+        ).textContent =
+            percentage + "%";
+
+
+        document.getElementById(
+            "progressFill"
+        ).style.width =
+            percentage + "%";
+
+
+        const message =
+            document.getElementById(
+                "message"
+            );
+
+
+        if (percentage === 100) {
+
+            message.textContent =
+                "🎉 Excellent! Today's target completed!";
+
+        }
+
+        else if (percentage >= 60) {
+
+            message.textContent =
+                "🔥 Great progress! Keep going!";
+
+        }
+
+        else if (percentage > 0) {
+
+            message.textContent =
+                "💪 Keep studying! You are making progress.";
+
+        }
+
+        else {
+
+            message.textContent =
+                "Complete your daily targets 🚀";
+
+        }
+
+    }
+
+
+    // =====================================
+    // NEXT DAY
+    // =====================================
+
+    function nextDay() {
+
+        currentDate.setDate(
+            currentDate.getDate() + 1
+        );
+
+
+        updateDate();
+
+        loadTopics();
+
+    }
+
+
+    // =====================================
+    // PREVIOUS DAY
+    // =====================================
+
+    function previousDay() {
+
+        currentDate.setDate(
+            currentDate.getDate() - 1
+        );
+
+
+        updateDate();
+
+        loadTopics();
+
+    }
+
+
+    // =====================================
+    // ADD EXTRA TOPIC
+    // =====================================
+
+    function addExtraTopic() {
+
+        const topicName =
+            prompt(
+                "Enter extra topic:"
+            );
+
+
+        if (!topicName) {
+
+            return;
+
+        }
+
+
+        const data =
+            getTodayData();
+
+
+        data.topics.push({
+
+            name: topicName,
+
+            completed: false,
+
+            note: ""
+
+        });
+
+
+        saveData(data);
+
+
+        loadTopics();
+
+    }
+
+
+    // =====================================
+    // START APP
+    // =====================================
+
+    updateDate();
+
+    loadTopics();
+
+</script>
+<script>
+
+if ("serviceWorker" in navigator) {
+
+    window.addEventListener("load", () => {
+
+        navigator.serviceWorker.register("./sw.js")
+            .then(() => {
+                console.log("Study Planner app ready");
+            })
+            .catch(error => {
+                console.log("Service Worker Error:", error);
+            });
+
+    });
+
+}
+
+</script>
+</body>
+</html>
