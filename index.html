@@ -1,406 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Study Planner</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            min-height: 100vh;
-            padding: 20px;
-
-            background:
-                radial-gradient(circle at 10% 20%, #7c3aed 0%, transparent 30%),
-                radial-gradient(circle at 90% 10%, #2563eb 0%, transparent 30%),
-                radial-gradient(circle at 80% 90%, #ec4899 0%, transparent 35%),
-                linear-gradient(135deg, #090e25, #141b3a);
-
-            color: white;
-        }
-
-        .app {
-            width: 100%;
-            max-width: 850px;
-            margin: auto;
-        }
-
-        /* HEADER */
-
-        .header {
-            text-align: center;
-            padding: 25px 15px;
-            margin-bottom: 18px;
-
-            background: rgba(255,255,255,0.12);
-            backdrop-filter: blur(18px);
-
-            border: 1px solid rgba(255,255,255,0.20);
-            border-radius: 22px;
-
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-        }
-
-        .header h1 {
-            font-size: 29px;
-            margin-bottom: 16px;
-        }
-
-        .day {
-            font-size: 25px;
-            font-weight: bold;
-        }
-
-        .date {
-            margin-top: 7px;
-            font-size: 17px;
-            color: #dbeafe;
-        }
-
-        /* NAVIGATION */
-
-        .navigation {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            margin-bottom: 18px;
-        }
-
-        .navigation button {
-            border: 1px solid rgba(255,255,255,0.25);
-            background: rgba(255,255,255,0.14);
-            color: white;
-
-            padding: 12px 18px;
-            border-radius: 12px;
-
-            font-size: 14px;
-            cursor: pointer;
-
-            backdrop-filter: blur(10px);
-        }
-
-        .navigation button:hover {
-            background: rgba(255,255,255,0.25);
-        }
-
-        /* STUDY CARD */
-
-        .study-card {
-            background: rgba(255,255,255,0.11);
-            backdrop-filter: blur(18px);
-
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 22px;
-
-            padding: 20px;
-
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-        }
-
-        .study-title {
-            font-size: 21px;
-            font-weight: bold;
-            margin-bottom: 18px;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-            border-radius: 14px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 650px;
-            background: rgba(0,0,0,0.15);
-        }
-
-        th {
-            background: rgba(0,0,0,0.25);
-            padding: 14px 10px;
-            font-size: 15px;
-        }
-
-        td {
-            padding: 13px 10px;
-            border-top: 1px solid rgba(255,255,255,0.12);
-        }
-
-        .content {
-            width: 40%;
-            font-size: 15px;
-        }
-
-        .tick {
-            width: 10%;
-            text-align: center;
-        }
-
-        .notes {
-            width: 50%;
-        }
-
-        /* CHECKBOX */
-
-        .tick input {
-            width: 23px;
-            height: 23px;
-            cursor: pointer;
-            accent-color: #22c55e;
-        }
-
-        /* NOTES */
-
-        .notes input {
-            width: 100%;
-            padding: 10px 12px;
-
-            border: 1px solid rgba(255,255,255,0.22);
-            border-radius: 9px;
-
-            background: rgba(255,255,255,0.12);
-            color: white;
-
-            outline: none;
-            font-size: 14px;
-        }
-
-        .notes input::placeholder {
-            color: #cbd5e1;
-        }
-
-        .notes input:focus {
-            border-color: #60a5fa;
-            background: rgba(255,255,255,0.18);
-        }
-
-        /* ADD TOPIC */
-
-        .add-topic {
-            width: 100%;
-            margin-top: 17px;
-
-            padding: 13px;
-
-            border: 1px dashed rgba(255,255,255,0.45);
-            border-radius: 12px;
-
-            background: rgba(255,255,255,0.08);
-            color: white;
-
-            font-size: 15px;
-            cursor: pointer;
-        }
-
-        .add-topic:hover {
-            background: rgba(255,255,255,0.16);
-        }
-
-        /* PROGRESS */
-
-        .progress-card {
-            margin-top: 18px;
-            padding: 20px;
-
-            background: rgba(255,255,255,0.11);
-            backdrop-filter: blur(18px);
-
-            border: 1px solid rgba(255,255,255,0.18);
-            border-radius: 22px;
-
-            box-shadow: 0 10px 35px rgba(0,0,0,0.25);
-        }
-
-        .progress-heading {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-            font-weight: bold;
-        }
-
-        .progress-bar {
-            width: 100%;
-            height: 18px;
-
-            background: rgba(255,255,255,0.15);
-            border-radius: 50px;
-
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-
-            background: linear-gradient(
-                90deg,
-                #22c55e,
-                #2dd4bf,
-                #38bdf8
-            );
-
-            border-radius: 50px;
-
-            transition: width 0.3s;
-        }
-
-        .message {
-            text-align: center;
-            margin-top: 12px;
-            color: #dbeafe;
-            font-size: 14px;
-        }
-
-        @media (max-width: 600px) {
-
-            body {
-                padding: 12px;
-            }
-
-            .header h1 {
-                font-size: 24px;
-            }
-
-            .day {
-                font-size: 22px;
-            }
-
-            .navigation button {
-                padding: 10px 12px;
-                font-size: 13px;
-            }
-
-            .study-card {
-                padding: 14px;
-            }
-        }
-
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>My Study Planner</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+:root{
+    --bg:#070b1d;
+    --card:rgba(255,255,255,.09);
+    --border:rgba(255,255,255,.14);
+    --text:#fff;
+    --muted:#b9c3d8;
+    --primary:#7c3aed;
+    --secondary:#ec4899;
+    --blue:#2563eb;
+    --green:#22c55e;
+}
+
+body{
+    min-height:100vh;
+    font-family:Arial,sans-serif;
+    color:var(--text);
+    background:
+        radial-gradient(circle at 10% 10%,rgba(124,58,237,.55),transparent 28%),
+        radial-gradient(circle at 90% 5%,rgba(37,99,235,.45),transparent 30%),
+        radial-gradient(circle at 90% 90%,rgba(236,72,153,.45),transparent 30%),
+        linear-gradient(145deg,#050816,#111936 50%,#090b20);
+    padding:14px;
+}
+
+button,input{
+    font-family:inherit;
+}
+
+button{
+    cursor:pointer;
+}
+
+.app{
+    max-width:900px;
+    margin:auto;
+}
+
+/* HEADER */
+
+.header{
+    padding:24px 18px;
+    text-align:center;
+    border:1px solid var(--border);
+    border-radius:28px;
+    background:rgba(255,255,255,.09);
+    backdrop-filter:blur(25px);
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.logo{
+    font-size:30px;
+    margin-bottom:8px;
+}
+
+.day{
+    font-size:25px;
+    font-weight:800;
+}
+
+.date{
+    margin-top:6px;
+    color:#dbeafe;
+}
+
+/* TOP ACTIONS */
+
+.top-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:14px 0;
+}
+
+.action-btn{
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:13px 10px;
+    color:white;
+    background:rgba(255,255,255,.09);
+    backdrop-filter:blur(15px);
+    font-weight:600;
+}
+
+.action-btn:hover{
+    background:rgba(255,255,255,.18);
+}
+
+/* NAV */
+
+.navigation{
+    display:flex;
+    gap:10px;
+    justify-content:space-between;
+    margin-bottom:14px;
+}
+
+.nav-btn{
+    flex:1;
+    border:0;
+    border-radius:15px;
+    padding:13px;
+    color:white;
+    font-weight:bold;
+    background:linear-gradient(135deg,#4f46e5,#7c3aed);
+}
+
+/* CARD */
+
+.card{
+    margin-bottom:14px;
+    padding:18px;
+    border:1px solid var(--border);
+    border-radius:24px;
+    background:var(--card);
+    backdrop-filter:blur(25px);
+    box-shadow:0 15px 45px rgba(0,0,0,.28);
+}
+
+.card-title{
+    font-size:20px;
+    font-weight:800;
+    margin-bottom:15px;
+}
+
+/* TOPICS */
+
+.topic{
+    margin-bottom:11px;
+    padding:14px;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:18px;
+    background:rgba(0,0,0,.18);
+}
+
+.topic-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+}
+
+.topic-check{
+    width:23px;
+    height:23px;
+    accent-color:#22c55e;
+    flex-shrink:0;
+}
+
+.topic-name{
+    flex:1;
+    font-size:15px;
+    font-weight:600;
+}
+
+.topic-tools{
+    display:flex;
+    gap:5px;
+}
+
+.small-btn{
+    border:0;
+    border-radius:9px;
+    padding:7px 9px;
+    color:white;
+    background:rgba(255,255,255,.12);
+}
+
+.small-btn:hover{
+    background:rgba(255,255,255,.22);
+}
+
+.note{
+    width:100%;
+    margin-top:10px;
+    padding:10px 12px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:11px;
+    outline:none;
+    color:white;
+    background:rgba(255,255,255,.08);
+}
+
+.note::placeholder{
+    color:#aeb8cc;
+}
+
+.topic-files{
+    display:flex;
+    gap:7px;
+    margin-top:9px;
+}
+
+.file-btn{
+    border:0;
+    border-radius:10px;
+    padding:8px 10px;
+    color:white;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+    font-size:12px;
+}
+
+.file-btn.view{
+    background:rgba(255,255,255,.13);
+}
+
+.add-topic{
+    width:100%;
+    padding:14px;
+    border:1px dashed rgba(255,255,255,.3);
+    border-radius:15px;
+    color:white;
+    background:rgba(255,255,255,.06);
+    font-weight:bold;
+}
+
+/* PROGRESS */
+
+.progress-number{
+    font-size:27px;
+    font-weight:900;
+}
+
+.progress-bar{
+    height:18px;
+    margin-top:10px;
+    overflow:hidden;
+    border-radius:50px;
+    background:rgba(255,255,255,.12);
+}
+
+.progress-fill{
+    width:0%;
+    height:100%;
+    border-radius:50px;
+    background:linear-gradient(90deg,#22c55e,#2dd4bf,#38bdf8);
+    transition:.3s;
+}
+
+.message{
+    margin-top:10px;
+    text-align:center;
+    color:#dbeafe;
+}
+
+/* MODAL */
+
+.modal{
+    position:fixed;
+    inset:0;
+    z-index:1000;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    padding:15px;
+    background:rgba(0,0,0,.65);
+    backdrop-filter:blur(10px);
+}
+
+.modal-box{
+    width:100%;
+    max-width:520px;
+    max-height:90vh;
+    overflow:auto;
+    padding:20px;
+    border:1px solid var(--border);
+    border-radius:25px;
+    background:#111936;
+    box-shadow:0 25px 80px rgba(0,0,0,.5);
+}
+
+.modal-title{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:18px;
+}
+
+.close{
+    border:0;
+    color:white;
+    background:transparent;
+    font-size:26px;
+}
+
+.form-group{
+    margin-bottom:13px;
+}
+
+.form-group label{
+    display:block;
+    margin-bottom:6px;
+    color:#dbeafe;
+    font-size:13px;
+}
+
+.form-group input{
+    width:100%;
+    padding:12px;
+    border:1px solid rgba(255,255,255,.15);
+    border-radius:12px;
+    outline:none;
+    color:white;
+    background:rgba(255,255,255,.08);
+}
+
+.primary{
+    width:100%;
+    border:0;
+    border-radius:13px;
+    padding:13px;
+    color:white;
+    font-weight:bold;
+    background:linear-gradient(135deg,#2563eb,#7c3aed);
+}
+
+.manager-item{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:9px;
+    padding:11px;
+    border-radius:13px;
+    background:rgba(255,255,255,.07);
+}
+
+.manager-name{
+    flex:1;
+    font-size:14px;
+}
+
+.manager-date{
+    color:#9fb0ca;
+    font-size:11px;
+}
+
+/* FILE SCREEN */
+
+.file-list{
+    display:grid;
+    gap:10px;
+}
+
+.file-item{
+    padding:12px;
+    border-radius:14px;
+    background:rgba(255,255,255,.08);
+}
+
+.file-item img{
+    max-width:100%;
+    max-height:220px;
+    border-radius:10px;
+    margin-bottom:8px;
+}
+
+.file-item a{
+    color:#93c5fd;
+}
+
+.delete-file{
+    margin-top:8px;
+    border:0;
+    border-radius:9px;
+    padding:8px 10px;
+    color:white;
+    background:#dc2626;
+}
+
+.empty{
+    padding:20px;
+    text-align:center;
+    color:#9caac0;
+}
+
+@media(max-width:600px){
+
+    body{
+        padding:10px;
+    }
+
+    .header{
+        padding:20px 12px;
+        border-radius:22px;
+    }
+
+    .logo{
+        font-size:25px;
+    }
+
+    .day{
+        font-size:22px;
+    }
+
+    .card{
+        padding:13px;
+        border-radius:20px;
+    }
+
+    .topic{
+        padding:12px;
+    }
+
+    .topic-name{
+        font-size:14px;
+    }
+
+    .topic-tools{
+        flex-direction:column;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
 <div class="app">
 
-    <!-- HEADER -->
-
     <div class="header">
-
-        <h1>📚 My Study Planner</h1>
-
-        <div class="day">
-            Tuesday
-        </div>
-
-        <div class="date">
-            22/09/2026
-        </div>
-
+        <div class="logo">📚 My Study Planner</div>
+        <div class="day" id="day"></div>
+        <div class="date" id="date"></div>
     </div>
 
+    <div class="top-actions">
+        <button class="action-btn" onclick="openPermanentManager()">
+            ⚙️ Permanent Topics
+        </button>
 
-    <!-- NAVIGATION -->
+        <button class="action-btn" onclick="openDailyManager()">
+            📝 Edit Today's Topics
+        </button>
+
+        <button class="action-btn" onclick="requestNotification()">
+            🔔 Enable Notification
+        </button>
+
+        <button class="action-btn" onclick="showToday()">
+            📅 Go to Today
+        </button>
+    </div>
 
     <div class="navigation">
-
-        <button onclick="previousDay()">
+        <button class="nav-btn" onclick="previousDay()">
             ← Previous Day
         </button>
 
-        <button onclick="nextDay()">
+        <button class="nav-btn" onclick="nextDay()">
             Next Day →
         </button>
-
     </div>
 
+    <div class="card">
 
-    <!-- STUDY -->
-
-    <div class="study-card">
-
-        <div class="study-title">
+        <div class="card-title">
             📖 Today's Study
         </div>
 
+        <div id="topicList"></div>
 
-        <div class="table-wrapper">
-
-            <table>
-
-                <thead>
-
-                    <tr>
-
-                        <th>Content</th>
-
-                        <th>Tick</th>
-
-                        <th>Additional Note</th>
-
-                    </tr>
-
-                </thead>
-
-
-                <tbody id="topicList">
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-
-        <button class="add-topic" onclick="addExtraTopic()">
-            ＋ Add Extra Topic
+        <button class="add-topic" onclick="addDailyTopic()">
+            ＋ Add Topic for This Day
         </button>
 
     </div>
 
+    <div class="card">
 
-    <!-- PROGRESS -->
-
-    <div class="progress-card">
-
-        <div class="progress-heading">
-
-            <span>
-                📊 Today's Completion
-            </span>
-
-            <span id="percentage">
-                0%
-            </span>
-
+        <div class="card-title">
+            📊 Today's Completion
         </div>
 
+        <div class="progress-number" id="percentage">
+            0%
+        </div>
 
         <div class="progress-bar">
-
-            <div
-                class="progress-fill"
-                id="progressFill">
-            </div>
-
+            <div class="progress-fill" id="progressFill"></div>
         </div>
 
-
-        <div
-            class="message"
-            id="message">
-
+        <div class="message" id="message">
             Complete your daily targets 🚀
-
         </div>
 
     </div>
@@ -408,436 +500,1073 @@
 </div>
 
 
+<!-- PERMANENT TOPIC MODAL -->
+
+<div class="modal" id="permanentModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            <h2>⚙️ Permanent Topics</h2>
+            <button class="close" onclick="closeModal('permanentModal')">×</button>
+        </div>
+
+        <div id="permanentList"></div>
+
+        <hr style="border-color:rgba(255,255,255,.1);margin:16px 0">
+
+        <h3 style="margin-bottom:14px">＋ Add Permanent Topic</h3>
+
+        <div class="form-group">
+            <label>Topic Name</label>
+            <input id="permanentName" placeholder="Example: Python Practice">
+        </div>
+
+        <div class="form-group">
+            <label>Start Date</label>
+            <input id="permanentStart" type="date">
+        </div>
+
+        <div class="form-group">
+            <label>End Date</label>
+            <input id="permanentEnd" type="date">
+        </div>
+
+        <button class="primary" onclick="savePermanentTopic()">
+            Add Permanent Topic
+        </button>
+
+    </div>
+</div>
+
+
+<!-- DAILY MANAGER -->
+
+<div class="modal" id="dailyModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            <h2>📝 Today's Topics</h2>
+            <button class="close" onclick="closeModal('dailyModal')">×</button>
+        </div>
+
+        <div id="dailyList"></div>
+
+    </div>
+</div>
+
+
+<!-- FILE MODAL -->
+
+<div class="modal" id="fileModal">
+
+    <div class="modal-box">
+
+        <div class="modal-title">
+            <h2>📎 Topic Files</h2>
+            <button class="close" onclick="closeModal('fileModal')">×</button>
+        </div>
+
+        <div id="fileList" class="file-list"></div>
+
+    </div>
+</div>
+
+
 <script>
 
-    // =====================================
-    // DEFAULT 5 TOPICS
-    // =====================================
+/* =========================
+   DEFAULT TOPICS
+========================= */
 
-    const defaultTopics = [
-
-        "Programming Lecture (1 hr)",
-
-        "Daily Notes Revision (1 hr)",
-
-        "Exams Preparation (1 hr)",
-
-        "Assignment (1 hr)",
-
-        "English Learning (30 min)"
-
-    ];
+const defaultTopics = [
+    "Programming Lecture (1 hr)",
+    "Daily Notes Revision (1 hr)",
+    "Exams Preparation (1 hr)",
+    "Assignment (1 hr)",
+    "English Learning (30 min)"
+];
 
 
-    // =====================================
-    // CURRENT DATE
-    // =====================================
+/* =========================
+   DATE
+========================= */
 
-    let currentDate = new Date();
+let currentDate = new Date();
+
+function dateKey(date){
+
+    return date.getFullYear() + "-" +
+        String(date.getMonth()+1).padStart(2,"0") + "-" +
+        String(date.getDate()).padStart(2,"0");
+
+}
+
+function displayDate(date){
+
+    document.getElementById("day").textContent =
+        date.toLocaleDateString("en-US",{weekday:"long"});
+
+    document.getElementById("date").textContent =
+        String(date.getDate()).padStart(2,"0") + "/" +
+        String(date.getMonth()+1).padStart(2,"0") + "/" +
+        date.getFullYear();
+
+}
 
 
-    // =====================================
-    // DATE FORMAT
-    // =====================================
+/* =========================
+   DATA
+========================= */
 
-    function formatDate(date) {
+function getPermanentTopics(){
 
-        const day =
-            String(date.getDate()).padStart(2, "0");
+    return JSON.parse(
+        localStorage.getItem("permanentTopics") || "[]"
+    );
 
-        const month =
-            String(date.getMonth() + 1).padStart(2, "0");
+}
 
-        const year =
-            date.getFullYear();
+function savePermanentTopics(data){
 
-        return `${day}/${month}/${year}`;
+    localStorage.setItem(
+        "permanentTopics",
+        JSON.stringify(data)
+    );
+
+}
+
+
+function getDayData(){
+
+    const key = dateKey(currentDate);
+
+    const saved = localStorage.getItem("study-" + key);
+
+    if(saved){
+        return JSON.parse(saved);
     }
 
+    let topics = [];
 
-    function getDateKey(date) {
+    /* DEFAULT TOPICS */
 
-        return (
-            date.getFullYear() +
-            "-" +
-            String(date.getMonth() + 1).padStart(2, "0") +
-            "-" +
-            String(date.getDate()).padStart(2, "0")
+    defaultTopics.forEach(name => {
+
+        topics.push({
+            id:crypto.randomUUID(),
+            name:name,
+            completed:false,
+            note:""
+        });
+
+    });
+
+
+    /* PERMANENT TOPICS */
+
+    getPermanentTopics().forEach(topic => {
+
+        if(
+            key >= topic.start &&
+            key <= topic.end
+        ){
+
+            topics.push({
+                id:crypto.randomUUID(),
+                name:topic.name,
+                completed:false,
+                note:"",
+                permanentId:topic.id
+            });
+
+        }
+
+    });
+
+
+    const data = {topics:topics};
+
+    saveDayData(data);
+
+    return data;
+
+}
+
+
+function saveDayData(data){
+
+    localStorage.setItem(
+        "study-" + dateKey(currentDate),
+        JSON.stringify(data)
+    );
+
+}
+
+
+/* =========================
+   LOAD TOPICS
+========================= */
+
+function loadTopics(){
+
+    displayDate(currentDate);
+
+    const data = getDayData();
+
+    const list = document.getElementById("topicList");
+
+    list.innerHTML = "";
+
+    data.topics.forEach((topic,index)=>{
+
+        const div = document.createElement("div");
+
+        div.className = "topic";
+
+        div.innerHTML = `
+
+            <div class="topic-row">
+
+                <input
+                    class="topic-check"
+                    type="checkbox"
+                    ${topic.completed ? "checked":""}
+                    onchange="toggleTopic(${index})"
+                >
+
+                <div class="topic-name">
+                    ${escapeHTML(topic.name)}
+                </div>
+
+                <div class="topic-tools">
+
+                    <button
+                        class="small-btn"
+                        onclick="editTopic(${index})">
+                        ✏️
+                    </button>
+
+                    <button
+                        class="small-btn"
+                        onclick="deleteTopic(${index})">
+                        🗑️
+                    </button>
+
+                </div>
+
+            </div>
+
+            <input
+                class="note"
+                placeholder="Additional Note..."
+                value="${escapeHTML(topic.note || "")}"
+                oninput="saveNote(${index},this.value)"
+            >
+
+            <div class="topic-files">
+
+                <button
+                    class="file-btn"
+                    onclick="chooseFile(${index})">
+                    📎 Add Picture/Document
+                </button>
+
+                <button
+                    class="file-btn view"
+                    onclick="showFiles(${index})">
+                    👁️ See Files
+                </button>
+
+            </div>
+
+        `;
+
+        list.appendChild(div);
+
+    });
+
+    updateProgress();
+
+}
+
+
+/* =========================
+   SAFE TEXT
+========================= */
+
+function escapeHTML(text){
+
+    return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================
+   CHECKBOX
+========================= */
+
+function toggleTopic(index){
+
+    const data = getDayData();
+
+    data.topics[index].completed =
+        !data.topics[index].completed;
+
+    saveDayData(data);
+
+    updateProgress();
+
+}
+
+
+/* =========================
+   NOTES
+========================= */
+
+function saveNote(index,note){
+
+    const data = getDayData();
+
+    data.topics[index].note = note;
+
+    saveDayData(data);
+
+}
+
+
+/* =========================
+   PROGRESS
+========================= */
+
+function updateProgress(){
+
+    const data = getDayData();
+
+    const total = data.topics.length;
+
+    const completed =
+        data.topics.filter(t=>t.completed).length;
+
+    const percentage =
+        total ? Math.round(completed/total*100) : 0;
+
+    document.getElementById("percentage").textContent =
+        percentage + "%";
+
+    document.getElementById("progressFill").style.width =
+        percentage + "%";
+
+    const message =
+        document.getElementById("message");
+
+    if(percentage === 100){
+
+        message.textContent =
+            "🎉 Excellent! Today's target completed!";
+
+    }else if(percentage >= 60){
+
+        message.textContent =
+            "🔥 Great progress! Keep going!";
+
+    }else if(percentage > 0){
+
+        message.textContent =
+            "💪 Keep studying! You are making progress.";
+
+    }else{
+
+        message.textContent =
+            "Complete your daily targets 🚀";
+
+    }
+
+}
+
+
+/* =========================
+   ADD DAILY TOPIC
+========================= */
+
+function addDailyTopic(){
+
+    const name = prompt("Enter today's topic:");
+
+    if(!name) return;
+
+    const data = getDayData();
+
+    data.topics.push({
+        id:crypto.randomUUID(),
+        name:name,
+        completed:false,
+        note:""
+    });
+
+    saveDayData(data);
+
+    loadTopics();
+
+}
+
+
+/* =========================
+   EDIT TOPIC
+========================= */
+
+function editTopic(index){
+
+    const data = getDayData();
+
+    const newName =
+        prompt("Edit topic:",data.topics[index].name);
+
+    if(!newName || !newName.trim()) return;
+
+    data.topics[index].name =
+        newName.trim();
+
+    saveDayData(data);
+
+    loadTopics();
+
+}
+
+
+/* =========================
+   DELETE TOPIC
+========================= */
+
+function deleteTopic(index){
+
+    const data = getDayData();
+
+    if(!confirm("Delete this topic from this day?")) return;
+
+    data.topics.splice(index,1);
+
+    saveDayData(data);
+
+    loadTopics();
+
+}
+
+
+/* =========================
+   DAILY MANAGER
+========================= */
+
+function openDailyManager(){
+
+    const data = getDayData();
+
+    const list =
+        document.getElementById("dailyList");
+
+    list.innerHTML = "";
+
+    if(data.topics.length === 0){
+
+        list.innerHTML =
+            '<div class="empty">No topics for this day.</div>';
+
+    }
+
+    data.topics.forEach((topic,index)=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "manager-item";
+
+        div.innerHTML = `
+
+            <div class="manager-name">
+                ${escapeHTML(topic.name)}
+            </div>
+
+            <button class="small-btn"
+                onclick="editTopic(${index});openDailyManager();">
+                ✏️
+            </button>
+
+            <button class="small-btn"
+                onclick="deleteTopic(${index});openDailyManager();">
+                🗑️
+            </button>
+
+        `;
+
+        list.appendChild(div);
+
+    });
+
+    document.getElementById("dailyModal").style.display =
+        "flex";
+
+}
+
+
+/* =========================
+   PERMANENT TOPICS
+========================= */
+
+function openPermanentManager(){
+
+    const list =
+        document.getElementById("permanentList");
+
+    list.innerHTML = "";
+
+    const topics = getPermanentTopics();
+
+    if(topics.length === 0){
+
+        list.innerHTML =
+            '<div class="empty">No permanent topics added.</div>';
+
+    }
+
+    topics.forEach(topic=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "manager-item";
+
+        div.innerHTML = `
+
+            <div class="manager-name">
+
+                <b>${escapeHTML(topic.name)}</b>
+
+                <div class="manager-date">
+                    ${topic.start} → ${topic.end}
+                </div>
+
+            </div>
+
+            <button
+                class="small-btn"
+                onclick="editPermanent('${topic.id}')">
+                ✏️
+            </button>
+
+            <button
+                class="small-btn"
+                onclick="deletePermanent('${topic.id}')">
+                🗑️
+            </button>
+
+        `;
+
+        list.appendChild(div);
+
+    });
+
+    document.getElementById("permanentModal").style.display =
+        "flex";
+
+}
+
+
+function savePermanentTopic(){
+
+    const name =
+        document.getElementById("permanentName").value.trim();
+
+    const start =
+        document.getElementById("permanentStart").value;
+
+    const end =
+        document.getElementById("permanentEnd").value;
+
+    if(!name || !start || !end){
+
+        alert("Please fill all fields.");
+
+        return;
+
+    }
+
+    if(end < start){
+
+        alert("End date cannot be before start date.");
+
+        return;
+
+    }
+
+    const topics = getPermanentTopics();
+
+    topics.push({
+
+        id:crypto.randomUUID(),
+        name:name,
+        start:start,
+        end:end
+
+    });
+
+    savePermanentTopics(topics);
+
+    document.getElementById("permanentName").value = "";
+    document.getElementById("permanentStart").value = "";
+    document.getElementById("permanentEnd").value = "";
+
+    openPermanentManager();
+
+    loadTopics();
+
+}
+
+
+function editPermanent(id){
+
+    const topics = getPermanentTopics();
+
+    const topic =
+        topics.find(t=>t.id===id);
+
+    if(!topic) return;
+
+    const name =
+        prompt("Edit permanent topic:",topic.name);
+
+    if(!name || !name.trim()) return;
+
+    const start =
+        prompt("Start date (YYYY-MM-DD):",topic.start);
+
+    const end =
+        prompt("End date (YYYY-MM-DD):",topic.end);
+
+    if(!start || !end) return;
+
+    topic.name = name.trim();
+    topic.start = start;
+    topic.end = end;
+
+    savePermanentTopics(topics);
+
+    openPermanentManager();
+
+    loadTopics();
+
+}
+
+
+function deletePermanent(id){
+
+    if(!confirm(
+        "Delete this permanent topic permanently?"
+    )) return;
+
+    const topics =
+        getPermanentTopics()
+        .filter(t=>t.id!==id);
+
+    savePermanentTopics(topics);
+
+    openPermanentManager();
+
+    loadTopics();
+
+}
+
+
+/* =========================
+   FILE DATABASE
+========================= */
+
+let db;
+
+const dbRequest =
+    indexedDB.open("StudyPlannerFiles",1);
+
+dbRequest.onupgradeneeded = function(event){
+
+    db = event.target.result;
+
+    if(!db.objectStoreNames.contains("files")){
+
+        db.createObjectStore(
+            "files",
+            {keyPath:"id"}
         );
 
     }
 
+};
 
-    // =====================================
-    // DATE DISPLAY
-    // =====================================
+dbRequest.onsuccess = function(event){
 
-    function updateDate() {
+    db = event.target.result;
 
-        document.querySelector(".day").textContent =
-            currentDate.toLocaleDateString(
-                "en-US",
-                {
-                    weekday: "long"
-                }
-            );
+};
 
+function saveFile(file,topicId){
 
-        document.querySelector(".date").textContent =
-            formatDate(currentDate);
+    if(!db){
+
+        alert("File system is still loading. Try again.");
+
+        return;
 
     }
 
+    const reader = new FileReader();
 
-    // =====================================
-    // GET DATA
-    // =====================================
+    reader.onload = function(){
 
-    function getTodayData() {
+        const transaction =
+            db.transaction(["files"],"readwrite");
 
-        const key =
-            getDateKey(currentDate);
+        const store =
+            transaction.objectStore("files");
 
-        const saved =
-            localStorage.getItem(
-                "study-" + key
-            );
+        store.put({
 
+            id:crypto.randomUUID(),
+            date:dateKey(currentDate),
+            topicId:topicId,
+            name:file.name,
+            type:file.type,
+            data:reader.result
 
-        if (saved) {
+        });
 
-            return JSON.parse(saved);
+        transaction.oncomplete = function(){
 
-        }
-
-
-        return {
-
-            topics: defaultTopics.map(topic => ({
-
-                name: topic,
-
-                completed: false,
-
-                note: ""
-
-            }))
+            alert("File added successfully 📎");
 
         };
 
-    }
+    };
+
+    reader.readAsDataURL(file);
+
+}
 
 
-    // =====================================
-    // SAVE DATA
-    // =====================================
+/* =========================
+   ADD FILE
+========================= */
 
-    function saveData(data) {
+function chooseFile(topicIndex){
 
-        const key =
-            getDateKey(currentDate);
+    const data = getDayData();
 
-        localStorage.setItem(
+    const topicId =
+        data.topics[topicIndex].id;
 
-            "study-" + key,
+    const input =
+        document.createElement("input");
 
-            JSON.stringify(data)
+    input.type = "file";
 
-        );
+    input.accept =
+        "image/*,.pdf,.doc,.docx,.txt";
 
-    }
+    input.onchange = function(){
 
+        if(input.files.length){
 
-    // =====================================
-    // LOAD TOPICS
-    // =====================================
-
-    function loadTopics() {
-
-        const data =
-            getTodayData();
-
-
-        const topicList =
-            document.getElementById(
-                "topicList"
+            saveFile(
+                input.files[0],
+                topicId
             );
-
-
-        topicList.innerHTML = "";
-
-
-        data.topics.forEach(
-            (topic, index) => {
-
-                const row =
-                    document.createElement("tr");
-
-
-                row.innerHTML = `
-
-                    <td class="content">
-                        ${index + 1}. ${topic.name}
-                    </td>
-
-                    <td class="tick">
-
-                        <input
-                            type="checkbox"
-                            ${topic.completed ? "checked" : ""}
-                            onchange="toggleTopic(${index})"
-                        >
-
-                    </td>
-
-                    <td class="notes">
-
-                        <input
-                            type="text"
-                            placeholder="Write a note..."
-                            value="${topic.note}"
-                            oninput="saveNote(${index}, this.value)"
-                        >
-
-                    </td>
-
-                `;
-
-
-                topicList.appendChild(row);
-
-            }
-        );
-
-
-        updateProgress();
-
-    }
-
-
-    // =====================================
-    // CHECKBOX
-    // =====================================
-
-    function toggleTopic(index) {
-
-        const data =
-            getTodayData();
-
-
-        data.topics[index].completed =
-            !data.topics[index].completed;
-
-
-        saveData(data);
-
-
-        updateProgress();
-
-    }
-
-
-    // =====================================
-    // SAVE NOTE
-    // =====================================
-
-    function saveNote(index, note) {
-
-        const data =
-            getTodayData();
-
-
-        data.topics[index].note =
-            note;
-
-
-        saveData(data);
-
-    }
-
-
-    // =====================================
-    // PROGRESS
-    // =====================================
-
-    function updateProgress() {
-
-        const data =
-            getTodayData();
-
-
-        const total =
-            data.topics.length;
-
-
-        const completed =
-            data.topics.filter(
-                topic => topic.completed
-            ).length;
-
-
-        const percentage =
-            total === 0
-            ? 0
-            : Math.round(
-                (completed / total) * 100
-            );
-
-
-        document.getElementById(
-            "percentage"
-        ).textContent =
-            percentage + "%";
-
-
-        document.getElementById(
-            "progressFill"
-        ).style.width =
-            percentage + "%";
-
-
-        const message =
-            document.getElementById(
-                "message"
-            );
-
-
-        if (percentage === 100) {
-
-            message.textContent =
-                "🎉 Excellent! Today's target completed!";
 
         }
 
-        else if (percentage >= 60) {
+    };
 
-            message.textContent =
-                "🔥 Great progress! Keep going!";
+    input.click();
 
-        }
-
-        else if (percentage > 0) {
-
-            message.textContent =
-                "💪 Keep studying! You are making progress.";
-
-        }
-
-        else {
-
-            message.textContent =
-                "Complete your daily targets 🚀";
-
-        }
-
-    }
+}
 
 
-    // =====================================
-    // NEXT DAY
-    // =====================================
+/* =========================
+   SHOW FILES
+========================= */
 
-    function nextDay() {
+function showFiles(topicIndex){
 
-        currentDate.setDate(
-            currentDate.getDate() + 1
-        );
+    const data = getDayData();
 
+    const topicId =
+        data.topics[topicIndex].id;
 
-        updateDate();
+    const list =
+        document.getElementById("fileList");
 
-        loadTopics();
+    list.innerHTML =
+        '<div class="empty">Loading files...</div>';
 
-    }
+    document.getElementById("fileModal").style.display =
+        "flex";
 
+    const transaction =
+        db.transaction(["files"],"readonly");
 
-    // =====================================
-    // PREVIOUS DAY
-    // =====================================
+    const store =
+        transaction.objectStore("files");
 
-    function previousDay() {
+    const request =
+        store.getAll();
 
-        currentDate.setDate(
-            currentDate.getDate() - 1
-        );
+    request.onsuccess = function(){
 
-
-        updateDate();
-
-        loadTopics();
-
-    }
-
-
-    // =====================================
-    // ADD EXTRA TOPIC
-    // =====================================
-
-    function addExtraTopic() {
-
-        const topicName =
-            prompt(
-                "Enter extra topic:"
+        const files =
+            request.result.filter(
+                f =>
+                    f.date === dateKey(currentDate) &&
+                    f.topicId === topicId
             );
 
+        list.innerHTML = "";
 
-        if (!topicName) {
+        if(files.length === 0){
+
+            list.innerHTML =
+                '<div class="empty">No files uploaded for this topic.</div>';
 
             return;
 
         }
 
+        files.forEach(file=>{
 
-        const data =
-            getTodayData();
+            const div =
+                document.createElement("div");
 
+            div.className = "file-item";
 
-        data.topics.push({
+            if(file.type.startsWith("image/")){
 
-            name: topicName,
+                div.innerHTML = `
 
-            completed: false,
+                    <img src="${file.data}">
 
-            note: ""
+                    <div>${escapeHTML(file.name)}</div>
+
+                    <button
+                        class="delete-file"
+                        onclick="deleteFile('${file.id}',${topicIndex})">
+                        Delete
+                    </button>
+
+                `;
+
+            }else{
+
+                div.innerHTML = `
+
+                    <div>📄 ${escapeHTML(file.name)}</div>
+
+                    <a href="${file.data}"
+                       target="_blank">
+                       Open Document
+                    </a>
+
+                    <br>
+
+                    <button
+                        class="delete-file"
+                        onclick="deleteFile('${file.id}',${topicIndex})">
+                        Delete
+                    </button>
+
+                `;
+
+            }
+
+            list.appendChild(div);
 
         });
 
-
-        saveData(data);
-
-
-        loadTopics();
-
-    }
-
-
-    // =====================================
-    // START APP
-    // =====================================
-
-    updateDate();
-
-    loadTopics();
-
-</script>
-<script>
-
-if ("serviceWorker" in navigator) {
-
-    window.addEventListener("load", () => {
-
-        navigator.serviceWorker.register("./sw.js")
-            .then(() => {
-                console.log("Study Planner app ready");
-            })
-            .catch(error => {
-                console.log("Service Worker Error:", error);
-            });
-
-    });
+    };
 
 }
 
+
+/* =========================
+   DELETE FILE
+========================= */
+
+function deleteFile(id,topicIndex){
+
+    if(!confirm("Delete this file?")) return;
+
+    const transaction =
+        db.transaction(["files"],"readwrite");
+
+    const store =
+        transaction.objectStore("files");
+
+    store.delete(id);
+
+    transaction.oncomplete = function(){
+
+        showFiles(topicIndex);
+
+    };
+
+}
+
+
+/* =========================
+   NAVIGATION
+========================= */
+
+function nextDay(){
+
+    currentDate.setDate(
+        currentDate.getDate()+1
+    );
+
+    loadTopics();
+
+}
+
+
+function previousDay(){
+
+    currentDate.setDate(
+        currentDate.getDate()-1
+    );
+
+    loadTopics();
+
+}
+
+
+function showToday(){
+
+    currentDate = new Date();
+
+    loadTopics();
+
+}
+
+
+/* =========================
+   MODAL
+========================= */
+
+function closeModal(id){
+
+    document.getElementById(id).style.display =
+        "none";
+
+}
+
+
+/* =========================
+   NOTIFICATION
+========================= */
+
+function requestNotification(){
+
+    if(!("Notification" in window)){
+
+        alert("This browser does not support notifications.");
+
+        return;
+
+    }
+
+    Notification.requestPermission()
+        .then(permission=>{
+
+            if(permission === "granted"){
+
+                alert(
+                    "🔔 Notification enabled. After 6 PM, incomplete goals will remind you."
+                );
+
+                check6PMNotification();
+
+            }else{
+
+                alert(
+                    "Notification permission was not allowed."
+                );
+
+            }
+
+        });
+
+}
+
+
+function check6PMNotification(){
+
+    if(!("Notification" in window)) return;
+
+    if(Notification.permission !== "granted") return;
+
+    const now = new Date();
+
+    if(now.getHours() < 18) return;
+
+    const data = getDayData();
+
+    const incomplete =
+        data.topics.filter(t=>!t.completed).length;
+
+    if(incomplete === 0) return;
+
+    const today =
+        dateKey(new Date());
+
+    const already =
+        localStorage.getItem(
+            "notification-" + today
+        );
+
+    if(already) return;
+
+    new Notification(
+        "📚 My Study Planner",
+        {
+            body:
+                "Your goal is incomplete. " +
+                incomplete +
+                " topic(s) are still remaining. 💪"
+        }
+    );
+
+    localStorage.setItem(
+        "notification-" + today,
+        "yes"
+    );
+
+}
+
+
+/* Check when app is opened */
+
+setInterval(
+    check6PMNotification,
+    60000
+);
+
+
+/* =========================
+   START
+========================= */
+
+loadTopics();
+
 </script>
+
 </body>
 </html>
